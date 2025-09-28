@@ -1,38 +1,24 @@
-name: Python CI
-# Trigger the workflow on push or pull requests to the main branch
+name: Deploy to GitHub Pages
+
 on:
   push:
     branches:
-      - master
-      - main
-  pull_request:
-    branches:
-      - master
-      - main
+      - main  # or 'master' if your repo uses master
 
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Check out the repository
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      # Step 2: Set up Python
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v2
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload static files
+        uses: actions/upload-pages-artifact@v2
         with:
-          python-version: '3.8'  # You can change this to any version you need
+          path: './'  # root of your website files
 
-     
-      # Step 4: Run tests
-      - name: Run tests
-        run: |
-          pytest  # Or any other test command you use, like `python -m unittest`
-      
-      # Step 5: (Optional) Deploy to a server or platform (example for Heroku)
-      # - name: Deploy to Heroku
-      #   run: heroku deploy command
-      #   env:
-      #     HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
